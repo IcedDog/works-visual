@@ -1,22 +1,22 @@
 class Beat {
-    bpmList = [{ "beat": 0, "bpm": 120 }];
-    preprocessBPM(bpm) {
+    bpmList = [{ beat: 0, bpm: 120 }];
+    preprocessBPM() {
         this.bpmList.forEach((item, index) => {
             if (index == 0) item.time = 0;
             else item.time = this.bpmList[index - 1].time + 60 / this.bpmList[index - 1].bpm * (item.beat - this.bpmList[index - 1].beat);
         });
     }
     constructor(bpm) {
-        if (Array.isArray(bpm) && Object.prototype) this.bpmList = bpm;
-        else this.bpmList = [{ "beat": 0, "bpm": bpm[0] }];
+        if (Array.isArray(bpm)) this.bpmList = bpm;
+        else this.bpmList = [{ beat: 0, bpm: bpm }];
         this.bpmList.sort((a, b) => a.beat - b.beat);
         this.preprocessBPM();
     }
     fromTime(time) {
         if (time < 0) return 0;
         let index = 0;
-        for (index = 0; time >= this.bpmList[index].time; index++);
-        return this.bpmList[index - 1].beat + (time - this.bpmList[index - 1].time) * 60 / this.bpmList[index - 1].bpm;
+        for (index = 0; index < this.bpmList.length && time >= this.bpmList[index].time; index++);
+        return this.bpmList[index - 1].beat + (time - this.bpmList[index - 1].time) / 60 * this.bpmList[index - 1].bpm;
     }
     toTime(beat) {
         if (beat < 0) return 0;
@@ -24,17 +24,6 @@ class Beat {
         for (index = 0; beat >= bpmList[index].beat; index++);
         return bpmList[index - 1].time + (beat - bpmList[index - 1].beat) * 60 / bpmList[index - 1].bpm;
     }
-}
-
-class VisualConfig {
-    primaryColor = "#000000";
-    secondaryColor = "#FFFFFF";
-    tertiaryColor = "#FFFFFF";
-    backgroundColor = "#FFFFFF";
-    textColor = "#000000";
-    infoComposer = "";
-    infoName = "";
-    infoCreator = "";
 }
 
 const Easings = {
@@ -205,3 +194,28 @@ const Easings = {
         return .5 * ((t -= 2) * t * (((overshoot *= (1.525)) + 1) * t + overshoot) + 2);
     }
 };
+
+function repeatTimes(progress, times) {
+    return progress * times % 1;
+}
+
+function Rel(x, y) {
+    return { x: x * windowWidth / 2 + windowWidth / 2, y: y * windowHeight / 2 + windowHeight / 2 };
+}
+
+function RelX(x) {
+    return x * windowWidth / 2 + windowWidth / 2
+}
+
+function RelY(y) {
+    return y * windowHeight / 2 + windowHeight / 2
+}
+
+function AbsX(val) {
+    return val * windowWidth;
+}
+
+function AbsY(val) {
+    return val * windowHeight;
+}
+
