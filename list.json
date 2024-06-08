@@ -1,0 +1,8 @@
+{
+    "extra": [
+        {
+            "script": "./soflan-chan/script.js",
+            "music": "./soflan-chan/song.ogg"
+        }
+    ]
+}

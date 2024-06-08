@@ -1,14 +1,16 @@
 class Beat {
     bpmList = [{ beat: 0, bpm: 120 }];
+    offset = 0; // in seconds
     preprocessBPM() {
         this.bpmList.forEach((item, index) => {
             if (index == 0) item.time = 0;
             else item.time = this.bpmList[index - 1].time + 60 / this.bpmList[index - 1].bpm * (item.beat - this.bpmList[index - 1].beat);
         });
     }
-    constructor(bpm) {
+    constructor(bpm, offset = 0) {
         if (Array.isArray(bpm)) this.bpmList = bpm;
         else this.bpmList = [{ beat: 0, bpm: bpm }];
+        this.offset = offset;
         this.bpmList.sort((a, b) => a.beat - b.beat);
         this.preprocessBPM();
     }
@@ -16,13 +18,84 @@ class Beat {
         if (time < 0) return 0;
         let index = 0;
         for (index = 0; index < this.bpmList.length && time >= this.bpmList[index].time; index++);
-        return this.bpmList[index - 1].beat + (time - this.bpmList[index - 1].time) / 60 * this.bpmList[index - 1].bpm;
+        return this.bpmList[index - 1].beat + (time - this.offset - this.bpmList[index - 1].time) / 60 * this.bpmList[index - 1].bpm;
     }
     toTime(beat) {
         if (beat < 0) return 0;
         let index = 0;
         for (index = 0; beat >= bpmList[index].beat; index++);
-        return bpmList[index - 1].time + (beat - bpmList[index - 1].beat) * 60 / bpmList[index - 1].bpm;
+        return bpmList[index - 1].time + (beat - bpmList[index - 1].beat) * 60 / bpmList[index - 1].bpm + this.offset;
+    }
+}
+
+
+
+class Visual {
+    EventPrototype = {
+        startBeat: 0,
+        endBeat: 0,
+        script: function (progress) { return progress; } // t is progress from 0 to 1
+    }
+    ObjectPrototype = {
+        name: "",
+        startBeat: 0,
+        endBeat: 0,
+        script: function (varibles) { },
+        varibles: {}
+    }
+
+    script = [];
+    beat = new Beat(120);
+    info = {
+        primaryColor: "#000000",
+        secondaryColor: "#FFFFFF",
+        tertiaryColor: "#FFFFFF",
+        backgroundColor: "#FFFFFF",
+        textColor: "#000000",
+        infoComposer: "",
+        infoName: "",
+        infoCreator: ""
+    }
+
+    constructor(input, bpm, info) {
+        this.script = input;
+        this.beat = new Beat(bpm);
+        if (info != undefined) {
+            this.info = info;
+        }
+        this.Init();
+    }
+
+    Init() {
+        // Sort by time
+        this.script.sort((a, b) => a.startBeat - b.startBeat);
+        for (let i = 0; i < this.script.length; i++) {
+            let object = this.script[i];
+            for (let [_, value] of Object.entries(object.varibles))
+                value.sort((a, b) => a.startBeat - b.startBeat);
+        }
+    }
+
+    Run(nowTime) {
+        let nowBeat = this.beat.fromTime(nowTime);
+        for (let i = 0; i < this.script.length; i++) {
+            let object = this.script[i];
+            if (nowBeat < object.startBeat) continue;
+            if (nowBeat > object.endBeat) break;
+
+            let vars = {};
+            for (let [key, variable] of Object.entries(object.varibles)) {
+                variable.forEach((event) => {
+                    if (nowBeat >= event.startBeat) {
+                        if (nowBeat > event.endBeat) return;
+                        let progress = (nowBeat - event.startBeat) / (event.endBeat - event.startBeat);
+                        vars[key] = event.script(progress, nowBeat);
+                    }
+                });
+            }
+
+            object.script(vars);
+        }
     }
 }
 
@@ -211,11 +284,10 @@ function RelY(y) {
     return y * windowHeight / 2 + windowHeight / 2
 }
 
-function AbsX(val) {
-    return val * windowWidth;
+function Abs(val) {
+    return val * Math.min(windowWidth, windowHeight);
 }
 
-function AbsY(val) {
-    return val * windowHeight;
+function log(message, name = "Main") {
+    console.log(`[${name}] ${message}`);
 }
-
