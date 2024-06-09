@@ -34,7 +34,21 @@ let script = [
     }
 ];
 let bpm = 128;
-let visual = new Visual(script, bpm);
+let info = {
+    primaryColor: "#000000",
+    secondaryColor: "#ffffff",
+    tertiaryColor: "#ffffff",
+    backgroundColor: "#ffffff",
+    textColor: "#000000",
+    secondaryTextColor: "#000000",
+    uiColor: "#ffffff",
+    secondaryUiColor: "#ffffff",
+    infoComposer: "",
+    infoName: "",
+    infoSubName: "",
+    infoCreator: ""
+}
+let visual = new Visual(script, bpm, info);
 let startTime = 0;
 let list = {};
 let soundList = {};
@@ -42,6 +56,8 @@ let scriptList = {};
 let index = 0;
 let nextIndex = 0;
 let hasPressed = false;
+let isPaused = false;
+let pauseTime = 0;
 
 function generateNextIndex() {
     nextIndex = (nextIndex + 1) % list.extra.length;
@@ -95,7 +111,10 @@ function draw() {
         textAlign(CENTER, CENTER);
         text("Click to start", RelX(0), RelY(0));
     }
-    if ((millis() - startTime) / 1000 > soundList.now.duration()) {
+    if (isPaused) {
+        startTime = millis() - pauseTime;
+    }
+    if ((millis() - startTime) / 1000 > soundList.now.duration() + 1) {
         soundList.now.stop();
         scriptList.now = scriptList.next;
         soundList.now = soundList.next;
@@ -110,4 +129,43 @@ function draw() {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+}
+
+function keyPressed() {
+    if (keyCode === LEFT_ARROW) {
+        if ((millis() - startTime - 5000) / 1000 <= 0) {
+            startTime = millis();
+            soundList.now.jump(0);
+            if (isPaused) pauseTime = 0;
+        }
+        else {
+            startTime += 5000;
+            if (isPaused) pauseTime -= 5000;
+            soundList.now.jump((millis() - startTime) / 1000);
+        }
+    }
+    if (keyCode === RIGHT_ARROW) {
+        if ((millis() - startTime + 5000) / 1000 >= soundList.now.duration()) {
+            startTime = 0;
+            soundList.now.jump(soundList.now.duration());
+            if (isPaused) pauseTime = soundList.now.duration() * 10000;
+        }
+        else {
+            startTime -= 5000;
+            if (isPaused) pauseTime += 5000;
+            soundList.now.jump((millis() - startTime) / 1000);
+        }
+    }
+    if (key === ' ') {
+        if (isPaused) {
+            soundList.now.play();
+            isPaused = false;
+            startTime = millis() - pauseTime;
+        } else {
+            soundList.now.pause();
+            isPaused = true;
+            pauseTime = millis() - startTime;
+        }
+        return false;
+    }
 }

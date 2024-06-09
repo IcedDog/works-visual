@@ -48,21 +48,23 @@ class Visual {
     beat = new Beat(120);
     info = {
         primaryColor: "#000000",
-        secondaryColor: "#FFFFFF",
-        tertiaryColor: "#FFFFFF",
-        backgroundColor: "#FFFFFF",
+        secondaryColor: "#ffffff",
+        tertiaryColor: "#ffffff",
+        backgroundColor: "#ffffff",
         textColor: "#000000",
+        secondaryTextColor: "#000000",
+        uiColor: "#ffffff",
+        secondaryUiColor: "#ffffff",
         infoComposer: "",
         infoName: "",
+        infoSubName: "",
         infoCreator: ""
     }
 
     constructor(input, bpm, info) {
         this.script = input;
         this.beat = new Beat(bpm);
-        if (info != undefined) {
-            this.info = info;
-        }
+        this.info = info;
         this.Init();
     }
 
@@ -290,4 +292,8 @@ function Abs(val) {
 
 function log(message, name = "Main") {
     console.log(`[${name}] ${message}`);
+}
+
+function lerp(a, b, t) {
+    return (1 - t) * a + t * b;
 }
