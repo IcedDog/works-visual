@@ -24,6 +24,5 @@ dist-ssr
 *.sw?
 
 # Other files
-.mp3
-.ogg
-.min.js
+*.mp3
+*.ogg
