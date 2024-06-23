@@ -3,6 +3,10 @@
         {
             "script": "./soflan-chan/script.js",
             "music": "./soflan-chan/song.ogg"
+        },
+        {
+            "script": "./ars-cantate/script.js",
+            "music": "./ars-cantate/audio.mp3"
         }
     ]
 }
