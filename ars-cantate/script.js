@@ -149,7 +149,7 @@ script = [
             line(RelX(0.4), RelY(-0.53), RelX(0.975), RelY(-0.53));
             strokeWeight(Abs(0.004));
             fill(info.backgroundColor);
-            circle(RelX(lerp(0.4, 0.975, varibles.var["nowBeat"] / 526)), RelY(-0.53), Abs(0.02));
+            circle(RelX(lerp(0.4, 0.975, varibles.var["nowBeat"] / songLength * 4)), RelY(-0.53), Abs(0.02));
 
         },
         varibles: {

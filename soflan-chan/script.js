@@ -121,7 +121,7 @@ script = [
             textSize(Abs(0.07));
             fill(info.textColor);
             textAlign(RIGHT, TOP);
-            textFont('Comfortaa');
+            textFont('Kosugi Maru');
             text(info.infoName, RelX(0.98), RelY(-0.95));
             textSize(Abs(0.03));
             textAlign(RIGHT, TOP);
@@ -150,7 +150,7 @@ script = [
             line(RelX(0.4), RelY(-0.53), RelX(0.975), RelY(-0.53));
             strokeWeight(Abs(0.004));
             fill(info.backgroundColor);
-            circle(RelX(lerp(0.4, 0.975, varibles.var["nowBeat"] / 526)), RelY(-0.53), Abs(0.02));
+            circle(RelX(lerp(0.4, 0.975, varibles.var["nowBeat"] / songLength)), RelY(-0.53), Abs(0.02));
 
         },
         varibles: {
