@@ -1,3 +1,5 @@
+import { Beat, Visual, Easings, repeatTimes, Rel, RelX, RelY, Abs, log, lerp } from './utils'
+
 const VisualConfig = {
     customTextToggle: true,
     customText: "work",

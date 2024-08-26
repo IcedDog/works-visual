@@ -297,3 +297,5 @@ function log(message, name = "Main") {
 function lerp(a, b, t) {
     return (1 - t) * a + t * b;
 }
+
+export { Beat, Visual, Easings, repeatTimes, Rel, RelX, RelY, Abs, log, lerp };
