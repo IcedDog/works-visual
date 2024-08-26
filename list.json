@@ -8,5 +8,11 @@
             "script": "./ars-cantate/script.js",
             "music": "./ars-cantate/audio.mp3"
         }
+    ],
+    "works": [
+        {
+            "script": "./flux-of-time/script.js",
+            "music": "./flux-of-time/song.ogg"
+        }
     ]
 }

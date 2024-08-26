@@ -50,6 +50,7 @@ let info = {
 }
 let visual = new Visual(script, bpm, info);
 let startTime = 0;
+let listRaw = {};
 let list = {};
 let soundList = {};
 let scriptList = {};
@@ -60,26 +61,26 @@ let isPaused = false;
 let pauseTime = 0;
 
 function generateNextIndex() {
-    nextIndex = (nextIndex + 1) % list.extra.length;
+    nextIndex = (nextIndex + 1) % list.length;
 }
 
 function loadInit() {
-    fetch('./list.json').then((response) => response.json()).then((json) => list = json).then(() => loadFirst());
+    fetch('./list.json').then((response) => response.json()).then((json) => { listRaw = json; list = listRaw.works; }).then(() => loadFirst());
 }
 
 function loadFirst() {
-    fetch(list.extra[index].script).then((response) => response.text()).then((text) => scriptList.now = text).then(() => {
-        soundList.now = loadSound(list.extra[index].music, () => {
-            if (VisualConfig.debug) log("Loaded: " + list.extra[index].script + " " + list.extra[index].music);
+    fetch(list[index].script).then((response) => response.text()).then((text) => scriptList.now = text).then(() => {
+        soundList.now = loadSound(list[index].music, () => {
+            if (VisualConfig.debug) log("Loaded: " + list[index].script + " " + list[index].music);
         });
     });
 }
 
 async function load() {
     generateNextIndex();
-    fetch(list.extra[nextIndex].script).then((response) => response.text()).then((text) => scriptList.next = text).then(() => {
-        soundList.next = loadSound(list.extra[nextIndex].music, () => {
-            if (VisualConfig.debug) log("Loaded next: " + list.extra[nextIndex].script + " " + list.extra[nextIndex].music);
+    fetch(list[nextIndex].script).then((response) => response.text()).then((text) => scriptList.next = text).then(() => {
+        soundList.next = loadSound(list[nextIndex].music, () => {
+            if (VisualConfig.debug) log("Loaded next: " + list[nextIndex].script + " " + list[nextIndex].music);
         });
     });
 }
