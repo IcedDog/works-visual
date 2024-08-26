@@ -65,7 +65,7 @@ function generateNextIndex() {
 }
 
 function loadInit() {
-    fetch('./list.json').then((response) => response.json()).then((json) => { listRaw = json; list = listRaw.works; }).then(() => loadFirst());
+    fetch('./list.json').then((response) => response.json()).then((json) => { listRaw = json; list = listRaw.extra; }).then(() => loadFirst());
 }
 
 function loadFirst() {
